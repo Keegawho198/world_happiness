@@ -1,133 +1,109 @@
-# world_happiness
+# World Happiness Report (2015–2017) Analysis
+
+## Overview
+
+This project explores and analyzes the World Happiness Report data from 2015 to 2017. The goal is to identify what drives happiness globally, how happiness levels change over time, and which factors show strong correlation with happiness scores. This analysis includes data cleaning, visualization, statistical analysis, and key insights, making it suitable for inclusion in a data analytics portfolio.
+
+## Dataset Summary
+
+* **Source**: World Happiness Report (2015–2017)
+* **Columns**: Country, Happiness Score, Economy (GDP per Capita), Family, Health (Life Expectancy), Freedom, Trust (Government Corruption), Generosity, Dystopia Residual, Year
+
+## Tools & Libraries Used
+
+* **Python** (Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn)
+* **Jupyter Notebook** for interactive coding
+
+## Step-by-Step Project Workflow
+
+### Step 1: Load and Understand the Dataset
+
+* Load the combined dataset from all 3 years
+* Check shape, data types, and preview data
+* Review column names and consistency
+
+### Step 2: Data Cleaning
+
+* Checked for and handled missing values
+* Verified and ensured consistent country names
+* Added a 'Year' column to each dataset before concatenation
+* Converted necessary columns to numeric format
+
+### Step 3: Exploratory Data Analysis (EDA)
+
+* **Distribution of Happiness Scores**: Histograms and boxplots used
+* **Top & Bottom 10 Countries**: Bar plots created for each year
+* **Trends Over Time**: Line plots used to track happiness score changes
+* **Pairplot & Correlation Heatmap**: Visualized relationships between happiness and features
+
+### Step 4: Key Questions Answered
+
+#### 1. Which factors are most correlated with happiness?
+
+* A correlation matrix revealed that:
+
+  * **Economy (GDP per Capita)**: 0.78 correlation
+  * **Health (Life Expectancy)**: 0.75
+  * **Family**: 0.64
+  * **Freedom**: 0.56
+* These were identified using `df.corr()` and visualized using a heatmap
+
+#### 2. Which countries improved or declined the most?
+
+* Calculated happiness score difference from 2015 to 2017 using:
+
+  ```python
+  pivot = world_df.pivot(index='Country', columns='Year', values='Happiness Score')
+  pivot['Change_2015_to_2017'] = pivot[2017] - pivot[2015]
+  ```
+* **Top Improvers**: Latvia, Romania, Togo
+* **Top Decliners**: Venezuela, Liberia, Haiti
+
+#### 3. Is GDP strongly linked to happiness?
+
+* Yes, a strong positive correlation (0.78) was found between GDP per capita and happiness score.
+* This was verified through correlation analysis and scatter plots.
+
+#### 4. Do people in freer countries report higher happiness?
+
+* Freedom had a moderate correlation of 0.56 with happiness score.
+* Analysis was done using the correlation matrix.
+
+### Step 5: Linear Regression
+
+* Built a linear regression model to predict Happiness Score from contributing features.
+
+```python
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+X = world_df[['Economy (GDP per Capita)', 'Family', 'Health (Life Expectancy)', 'Freedom', 'Trust (Government Corruption)', 'Generosity']]
+y = world_df['Happiness Score']
+
+model = LinearRegression()
+model.fit(X, y)
+y_pred = model.predict(X)
+
+print("R-squared:", r2_score(y, y_pred))
+print("Mean Squared Error:", mean_squared_error(y, y_pred))
+```
+
+* **R-squared**: 0.75 (model explains 75% of the variance)
+* **Mean Squared Error**: 0.32
+
+### Key Insights
+
+* **GDP per Capita** is the strongest contributor to happiness.
+* **Health** and **Family** also show significant influence.
+* Happiness increased in several Eastern European and African countries.
+* Countries with high freedom scores tend to report higher happiness, but not as strongly as GDP.
 
 
-Step-by-Step Guide for World Happiness Project
-🧾 Step 1: Understand the Dataset
-Load the dataset into a pandas DataFrame.
+## Future Work
 
-Use df.head(), df.info(), and df.describe() to explore:
+* Predict happiness scores using advanced models (Random Forest, XGBoost)
+* Add regional clustering to visualize happiness by continent
+* Time series forecasting for future happiness trends
 
-Columns present
-
-Missing values
-
-Data types
-
-Basic distributions
-
-🔍 Step 2: Data Cleaning
-Standardize column names (remove whitespace, lowercase, rename if inconsistent across years).
-
-Check for and handle missing values (df.isnull().sum()).
-
-Convert year column to int if necessary.
-
-Ensure country names are consistent.
-
-📊 Step 3: Exploratory Data Analysis (EDA)
-Start with:
-
-Overall distribution of happiness scores
-
-Average happiness score per year
-
-Happiness score by region (if available)
-
-Correlation heatmap among variables (e.g., Economy, Family, Health, Freedom, Generosity, Trust)
-
-Use visuals:
-
-Histograms and boxplots for score distributions
-
-Bar plots for top/bottom 10 happiest countries per year
-
-Line plots for country-wise trends across 2015–2017
-
-Pairplots or scatter plots for variable relationships
-
-📈 Step 4: Key Questions to Answer
-Which factors are most correlated with happiness?
-
-Which countries improved or declined in happiness the most over time?
-
-Is GDP strongly linked to happiness?
-
-Do people in freer countries report higher happiness?
-
-🧠 Step 5: Insights and Reporting
-Summarize key findings:
-
-What contributes most to happiness?
-
-How does happiness shift geographically or over time?
-
-Make visualizations to support each insight.
-
-📦 Step 6: Optional – Modeling
-Try linear regression to predict happiness score from other features.
-
-Evaluate model performance using R², MAE, etc.
-
-📚 Step 7: Wrap-Up
-Create a Jupyter Notebook or Python script with:
-
-Cleaned code
-
-Visuals
-
-Markdown cells explaining each section
-
-Prepare a concise README with project purpose, methodology, key findings, and next steps.
-
-
-
-
-
-
----------------
-
-🔑 Summary of Key Findings
-✅ What contributes most to happiness?
-Economy (GDP per Capita) is the strongest contributor to happiness, with a correlation of 0.785 to the Happiness Score.
-
-Other significant contributors include:
-
-Health (Life Expectancy) → Correlation: 0.748
-
-Family → Correlation: 0.637
-
-Freedom → Correlation: 0.560
-
-Lower influence factors:
-
-Trust (Government Corruption) → 0.282
-
-Generosity → 0.222
-
-🧠 Interpretation:
-Wealthier countries tend to be happier, especially when combined with good healthcare, strong family/social support, and personal freedom.
-
-🌍 How does happiness shift geographically or over time?
-📈 Top Improvers (2015–2017)
-Countries with the most positive change in happiness score:
-
-Latvia (+0.75)
-
-Romania (+0.70)
-
-Togo, Senegal, Gabon, Egypt...
-
-➡️ Most are developing or reforming nations, showing progress in well-being.
-
-📉 Top Decliners (2015–2017)
-Countries with the greatest drop in happiness score:
-
-Venezuela (−1.56)
-
-Liberia, Haiti, Zimbabwe, Zambia...
-
-➡️ These countries are experiencing economic, political, or humanitarian crises.
-
-🧠 Interpretation:
-Happiness tends to decline sharply in countries undergoing instability or recession, while consistent reforms or development lead to increases in happiness over time.
+---
 
